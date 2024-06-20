@@ -1,0 +1,33 @@
+/* Add this to your global CSS or a separate CSS file */
+@keyframes fogAnimation {
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+}
+
+/* Add this to your global CSS or a separate CSS file */
+.fog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + 100px); /* Adjusted width to accommodate fog movement */
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 30, 30, 0) 0%,
+    rgba(248, 207, 252, 0.767) 50%,
+    rgba(255, 30, 30, 0) 100%
+  ); /* Adjusted gradient stops */
+  animation: fogAnimation 10s linear infinite;
+  z-index: -1;
+}
+
+#main-nav-box {
+  position: relative;
+  /* h: 100%; */
+  overflow: hidden; /* Hide overflow to make the wave effect clean*/
+}
