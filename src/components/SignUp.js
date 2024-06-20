@@ -93,7 +93,6 @@ const SignUp = () => {
 
     return (
         <div className='login-form-top d-flex flex-column align-items-center'>
-            <Navbar />
             <div className="login-container d-flex flex-column align-items-center mt-5">
                 <div className='mt-2 mb-5' style={{ fontSize: '30px' }}>Sign Up</div>
                 <div className="form-floating mb-3">

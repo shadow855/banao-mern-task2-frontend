@@ -70,7 +70,7 @@ const Login = () => {
             setLoading(false);
             setUserName("");
             setPassword("");
-            navigate('/dashboard'); //navigate to dashboard if logged in successfully
+            navigate('/posts'); //navigate to dashboard if logged in successfully
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",
@@ -139,7 +139,6 @@ const Login = () => {
 
     return (
         <div className='login-form-top d-flex flex-column align-items-center'>
-            <Navbar />
             <div className="login-container d-flex flex-column align-items-center mt-5">
                 <div className='mt-2 mb-5' style={{ fontSize: '30px' }}>Login</div>
                 <div className="form-floating mb-3">
@@ -176,14 +175,14 @@ const Login = () => {
                 <div className="mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{ cursor: 'pointer' }}>Forgot Password?</div>
 
                 {/* <!-- Modal --> */}
-                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h1 className="modal-title fs-5" id="exampleModalLabel">Update Password</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleClear}></button>
                             </div>
-                            <div className="modal-body">
+                            <div className="modal-body d-flex flex-column align-items-center">
                                 <div className="form-floating mb-3">
                                     <input type="name" className="form-control" id="floatingInput" placeholder="" value={email} onChange={(e) => setEmail(e.target.value)} />
                                     <label htmlFor="floatingInput">Email</label>

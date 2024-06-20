@@ -6,8 +6,6 @@
 
 .login-form-top {
   width: 100%;
-  /* border: 1px solid red; */
-  /* width: 50%; */
 }
 
 .login-container {
@@ -41,4 +39,47 @@
   height: 40px;
 }
 
-/* modal css */
+/* posts css */
+
+.posts-top-container {
+  width: 100%;
+  /* min-height: 100vh; */
+  border: 0.1px solid red;
+}
+
+.footer {
+  width: 100%;
+  border: 0.1px solid red;
+  position: fixed;
+  bottom: 0;
+  height: 60px;
+  background-color: #f0f0f0;
+}
+
+.footer-icon {
+  border: 0.1px solid;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  /* background-color: white; */
+  color: black;
+}
+
+.footer-icon.active {
+  color: white;
+  background-color: black;
+}
+
+.footer-icon .fas {
+  transition: color 0.3s ease;
+}
+
+.footer-icon.active .fas {
+  color: white;
+}
+
+.footer-icon-add:active {
+  color: white;
+  background-color: black;
+}
