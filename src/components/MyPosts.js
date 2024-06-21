@@ -31,6 +31,7 @@ const MyPosts = () => {
     const [currentPostId, setCurrentPostId] = useState(null);
     const [loadingComment, setLoadingComment] = useState(false);
     const [loadingEdit, setLoadingEdit] = useState(false);
+    const [postToEdit, setPostToEdit] = useState(null);
 
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -271,7 +272,7 @@ const MyPosts = () => {
 
     };
 
-    const submitHandlerEdit = async (id) => {
+    const submitHandlerEdit = async () => {
         setLoadingEdit(true);
 
         try {
@@ -282,7 +283,7 @@ const MyPosts = () => {
                 },
             };
 
-            const { data } = await axios.put(`${URL}/api/posts/updatepost/${id}`, { post: picEdit }, config);
+            const { data } = await axios.put(`${URL}/api/posts/updatepost/${postToEdit}`, { post: picEdit }, config);
             toast({
                 title: "Post added Successfully",
                 status: 'success',
@@ -308,6 +309,11 @@ const MyPosts = () => {
             setLoadingEdit(false);
         }
     }
+
+    const handleOpenEditModal = (postId) => {
+        setPostToEdit(postId);
+        onOpen();
+    };
 
     const calculateTimeDifference = (updatedAt) => {
         const now = new Date();
@@ -338,12 +344,12 @@ const MyPosts = () => {
                     posts.map((post) => (
                         <div className="single-post-holder mt-5" key={post._id}>
                             <div className="top-username-holder d-flex justify-content-between align-items-center px-3">
-                                <div className='d-flex align-items-center'>{post.user.username} • <div style={{ fontSize: '15px', fontWeight: '500', marginLeft: '3px', marginTop: '3px' }}>{calculateTimeDifference(post.updatedAt)}</div></div>
+                                <div className='d-flex align-items-center'>{post.user.username} • <div style={{ fontSize: '15px', fontWeight: '500', marginLeft: '3px', marginTop: '3px' }}>{calculateTimeDifference(post.createdAt)}</div></div>
                                 <div className='list-container'>
                                     <button onClick={() => toggleList(post._id)} className='button-list'><SlOptionsVertical /></button>
                                     {activePostId === post._id && (
                                         <ul className="list-group">
-                                            <li className="list-group-item"><MdEdit data-bs-toggle="modal" data-bs-target="#staticBackdropEdit" /></li>
+                                            <li className="list-group-item"><MdEdit onClick={() => handleOpenEditModal(post._id)} /></li>
                                             <li className="list-group-item"><MdDelete onClick={() => confirmDeletePost(post._id)} /></li>
                                         </ul>
                                     )}
@@ -370,7 +376,7 @@ const MyPosts = () => {
                                             <div className="modal-footer">
                                                 {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Discard</button> : <></>}
                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Close</button>
-                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => submitHandlerEdit(post._id)}>
+                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => handleOpenEditModal(post._id)}>
                                                     {loadingEdit ? <Spinner animation="border" size="sm" /> : 'Update Post'}
                                                 </button> : <></>}
 
@@ -446,6 +452,22 @@ const MyPosts = () => {
                         <Button colorScheme="red" mr={3} onClick={deletePost}>
                             Delete
                         </Button>
+                        <Button variant="ghost" onClick={onClose}>Cancel</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            {/* Modal for edit post */}
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Edit Post</ModalHeader>
+                    <ModalBody>
+                        <input type="file" accept="image/*" onChange={(e) => handleFileInputChangeEdit(e.target.files[0])} />
+                        {selectedImageEdit && <img src={selectedImageEdit} alt="Selected" className="preview-image" />}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="teal" mr={3} onClick={submitHandlerEdit} isLoading={loadingEdit}>Save</Button>
                         <Button variant="ghost" onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>

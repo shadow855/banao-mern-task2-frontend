@@ -190,7 +190,7 @@ const AllPosts = () => {
                     posts.map((post) => (
                         <div className="single-post-holder mt-5" key={post._id}>
                             <div className="top-username-holder d-flex align-items-center px-3">
-                                {post.user.username} • <div style={{ fontSize: '15px', fontWeight: '500', marginLeft: '3px', marginTop: '3px' }}>{calculateTimeDifference(post.updatedAt)}</div>
+                                {post.user.username} • <div style={{ fontSize: '15px', fontWeight: '500', marginLeft: '3px', marginTop: '3px' }}>{calculateTimeDifference(post.createdAt)}</div>
                             </div>
                             <div className="actual-post-div d-flex justify-content-center ">
                                 <img src={post.post} alt="not found" className='image-container' />
