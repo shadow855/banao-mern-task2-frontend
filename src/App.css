@@ -3,6 +3,12 @@
 * {
   font-family: "IBM Plex Sans", cursive;
 }
+.heading-title {
+  font-size: 35px;
+}
+.logout-icon {
+  font-size: 25px;
+}
 
 .login-form-top {
   width: 100%;
@@ -96,6 +102,9 @@
   .floatingInput {
     font-size: 15px;
   }
+  .heading-title {
+    font-size: 30px;
+  }
 }
 
 @media screen and (max-width: 470px) {
@@ -119,6 +128,12 @@
   .login-text {
     font-size: 13px;
   }
+  .heading-title {
+    font-size: 27px;
+  }
+  .logout-icon {
+    font-size: 22px;
+  }
 }
 @media screen and (max-width: 420px) {
   .login-button {
@@ -138,6 +153,12 @@
   .login-text {
     font-size: 13px;
   }
+  .heading-title {
+    font-size: 25px;
+  }
+  .logout-icon {
+    font-size: 20px;
+  }
 }
 @media screen and (max-width: 370px) {
   .login-button {
@@ -156,5 +177,11 @@
   }
   .login-text {
     font-size: 11px;
+  }
+  .heading-title {
+    font-size: 22px;
+  }
+  .logout-icon {
+    font-size: 18px;
   }
 }
