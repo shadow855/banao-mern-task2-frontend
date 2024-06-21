@@ -310,11 +310,6 @@ const MyPosts = () => {
         }
     }
 
-    const handleOpenEditModal = (postId) => {
-        setPostToEdit(postId);
-        onOpen();
-    };
-
     const calculateTimeDifference = (updatedAt) => {
         const now = new Date();
         const updatedTime = new Date(updatedAt);
@@ -349,7 +344,7 @@ const MyPosts = () => {
                                     <button onClick={() => toggleList(post._id)} className='button-list'><SlOptionsVertical /></button>
                                     {activePostId === post._id && (
                                         <ul className="list-group">
-                                            <li className="list-group-item"><MdEdit onClick={() => handleOpenEditModal(post._id)} /></li>
+                                            <li className="list-group-item"><MdEdit data-bs-toggle="modal" data-bs-target="#staticBackdropEdit" onClick={() => setPostToEdit(post._id)} /></li>
                                             <li className="list-group-item"><MdDelete onClick={() => confirmDeletePost(post._id)} /></li>
                                         </ul>
                                     )}
@@ -376,7 +371,7 @@ const MyPosts = () => {
                                             <div className="modal-footer">
                                                 {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Discard</button> : <></>}
                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Close</button>
-                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => handleOpenEditModal(post._id)}>
+                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={submitHandlerEdit}>
                                                     {loadingEdit ? <Spinner animation="border" size="sm" /> : 'Update Post'}
                                                 </button> : <></>}
 
@@ -452,22 +447,6 @@ const MyPosts = () => {
                         <Button colorScheme="red" mr={3} onClick={deletePost}>
                             Delete
                         </Button>
-                        <Button variant="ghost" onClick={onClose}>Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-
-            {/* Modal for edit post */}
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Edit Post</ModalHeader>
-                    <ModalBody>
-                        <input type="file" accept="image/*" onChange={(e) => handleFileInputChangeEdit(e.target.files[0])} />
-                        {selectedImageEdit && <img src={selectedImageEdit} alt="Selected" className="preview-image" />}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="teal" mr={3} onClick={submitHandlerEdit} isLoading={loadingEdit}>Save</Button>
                         <Button variant="ghost" onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
