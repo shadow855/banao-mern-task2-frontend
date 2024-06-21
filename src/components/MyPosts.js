@@ -201,7 +201,7 @@ const MyPosts = () => {
     };
 
     const handleFileInputChangeEdit = (picsEdit) => {
-        setLoading(true);
+        // setLoading(true);
         if (picsEdit === undefined) {
             toast({
                 title: "Please select an Image!",
@@ -210,17 +210,18 @@ const MyPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            setLoading(false);
+            // setLoading(false);
             return;
         };
-        if (picsEdit.type === "image/jpeg" || picsEdit.type === "image/png" || picsEdit.type === "image/jpg") {
 
+        if (picsEdit) {
             const readerEdit = new FileReader();
             readerEdit.onloadend = () => {
-                setSelectedImageEdit(readerEdit.result); // Update selected image state
+                setSelectedImageEdit(readerEdit.result); // Store selected image as base64 URL
             };
             readerEdit.readAsDataURL(picsEdit); // Convert file to base64 URL
-
+        }
+        if (picsEdit.type === "image/jpeg" || picsEdit.type === "image/png" || picsEdit.type === "image/jpg") {
             const data = new FormData();
             data.append("file", picsEdit);
             data.append("upload_preset", "chat-app");
@@ -233,11 +234,11 @@ const MyPosts = () => {
                 .then((data) => {
                     setPicEdit(data.url.toString());
                     console.log(data.url.toString());
-                    setLoading(false);
+                    // setLoading(false);
                 })
                 .catch((err) => {
                     console.log(err);
-                    setLoading(false);
+                    // setLoading(false);
                 });
         }
         else {
@@ -248,11 +249,49 @@ const MyPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            setLoading(false);
+            // setLoading(false);
             return;
         }
 
     };
+
+    const submitHandlerEdit = async (id) => {
+        // setLoading(true);
+
+        try {
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    "Content-type": "application/json",
+                },
+            };
+
+            const { data } = await axios.put(`${URL}/api/posts/updatepost/${id}`, { post: picEdit }, config);
+            toast({
+                title: "Post added Successfully",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+
+            localStorage.setItem("userInfo", JSON.stringify(data));
+            setSelectedImageEdit(null);
+            setPicEdit(null);
+            // setLoading(false);
+            getAllPosts();
+        } catch (error) {
+            toast({
+                title: "Error Occurred!",
+                description: error.response.data.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            // setLoading(false);
+        }
+    }
 
     return (
         <div className='all-posts-top-ccontainer mt-2'>
@@ -296,8 +335,8 @@ const MyPosts = () => {
                                             <div className="modal-footer">
                                                 {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Discard</button> : <></>}
                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Close</button>
-                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" >
-                                                    {loading ? <Spinner animation="border" size="sm" /> : 'Add'}
+                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => submitHandlerEdit(post._id)}>
+                                                    {loading ? <Spinner animation="border" size="sm" /> : 'Update Post'}
                                                 </button> : <></>}
 
                                             </div>
