@@ -16,6 +16,7 @@ const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [updatedPasswordVisible, setUpdatedPasswordVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loadingForgot, setLoadingForgot] = useState(false);
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -89,7 +90,7 @@ const Login = () => {
     }
 
     const handleUpdatePassword = async () => {
-        setLoading(true);
+        setLoadingForgot(true);
 
         if (!email || !updatedpassword) {
             toast({
@@ -99,7 +100,7 @@ const Login = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            setLoading(false);
+            setLoadingForgot(false);
             return;
         }
 
@@ -124,7 +125,7 @@ const Login = () => {
                 position: 'bottom',
             });
 
-            setLoading(false);
+            setLoadingForgot(false);
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",
@@ -133,7 +134,7 @@ const Login = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            setLoading(false);
+            setLoadingForgot(false);
         }
     };
 
@@ -208,8 +209,8 @@ const Login = () => {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={handleClear}>Close</button>
-                                <button type="button" className="btn btn-primary" onClick={handleUpdatePassword} disabled={loading}>
-                                    {loading ? <Spinner animation="border" size="sm" /> : 'Update Password'}
+                                <button type="button" className="btn btn-primary" onClick={handleUpdatePassword} disabled={loadingForgot}>
+                                    {loadingForgot ? <Spinner animation="border" size="sm" /> : 'Update Password'}
                                 </button>
                             </div>
                         </div>

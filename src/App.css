@@ -88,46 +88,35 @@
   background-color: black;
 }
 
-@media screen and (max-width: 580px) {
-  .guest-button {
-    font-size: 13px;
+@media screen and (max-width: 1000px) {
+  .login-container {
+    width: 50%;
   }
-  .login-button {
-    font-size: 13px;
+}
+
+@media screen and (max-width: 700px) {
+  .login-container {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .login-container {
+    width: 60%;
   }
 
-  .signup-text {
-    font-size: 13px;
+  .heading-title {
+    font-size: 30px;
   }
-  .floatingInput {
-    font-size: 15px;
-  }
+}
+
+@media screen and (max-width: 580px) {
   .heading-title {
     font-size: 30px;
   }
 }
 
 @media screen and (max-width: 470px) {
-  .guest-button {
-    font-size: 11px;
-  }
-  .login-button {
-    font-size: 11px;
-  }
-
-  .signup-text {
-    font-size: 11px;
-  }
-  .floatingInput {
-    font-size: 13px;
-  }
-
-  .forgot-text {
-    font-size: 13px;
-  }
-  .login-text {
-    font-size: 13px;
-  }
   .heading-title {
     font-size: 27px;
   }
@@ -136,23 +125,10 @@
   }
 }
 @media screen and (max-width: 420px) {
-  .login-button {
-    font-size: 11px;
+  .login-container {
+    width: 75%;
   }
 
-  .signup-text {
-    font-size: 11px;
-  }
-  .floatingInput {
-    font-size: 11px;
-  }
-
-  .forgot-text {
-    font-size: 13px;
-  }
-  .login-text {
-    font-size: 13px;
-  }
   .heading-title {
     font-size: 25px;
   }
@@ -161,23 +137,6 @@
   }
 }
 @media screen and (max-width: 370px) {
-  .login-button {
-    font-size: 11px;
-  }
-
-  .signup-text {
-    font-size: 11px;
-  }
-  .floatingInput {
-    font-size: 9px;
-  }
-
-  .forgot-text {
-    font-size: 13px;
-  }
-  .login-text {
-    font-size: 11px;
-  }
   .heading-title {
     font-size: 22px;
   }
