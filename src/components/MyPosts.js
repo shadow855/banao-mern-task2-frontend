@@ -28,6 +28,7 @@ const MyPosts = () => {
     const [userId, setUserId] = useState('');
     const [newComment, setNewComment] = useState('');
     const [currentPostId, setCurrentPostId] = useState(null);
+    const [loadingEdit, setLoadingEdit] = useState(false);
 
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -201,7 +202,7 @@ const MyPosts = () => {
     };
 
     const handleFileInputChangeEdit = (picsEdit) => {
-        // setLoading(true);
+        setLoadingEdit(true);
         if (picsEdit === undefined) {
             toast({
                 title: "Please select an Image!",
@@ -210,7 +211,7 @@ const MyPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            // setLoading(false);
+            setLoadingEdit(false);
             return;
         };
 
@@ -234,11 +235,11 @@ const MyPosts = () => {
                 .then((data) => {
                     setPicEdit(data.url.toString());
                     console.log(data.url.toString());
-                    // setLoading(false);
+                    setLoadingEdit(false);
                 })
                 .catch((err) => {
                     console.log(err);
-                    // setLoading(false);
+                    setLoadingEdit(false);
                 });
         }
         else {
@@ -249,14 +250,14 @@ const MyPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            // setLoading(false);
+            setLoadingEdit(false);
             return;
         }
 
     };
 
     const submitHandlerEdit = async (id) => {
-        // setLoading(true);
+        setLoadingEdit(true);
 
         try {
             const config = {
@@ -278,7 +279,7 @@ const MyPosts = () => {
             localStorage.setItem("userInfo", JSON.stringify(data));
             setSelectedImageEdit(null);
             setPicEdit(null);
-            // setLoading(false);
+            setLoadingEdit(false);
             getAllPosts();
         } catch (error) {
             toast({
@@ -289,7 +290,7 @@ const MyPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            // setLoading(false);
+            setLoadingEdit(false);
         }
     }
 
@@ -336,7 +337,7 @@ const MyPosts = () => {
                                                 {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Discard</button> : <></>}
                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Close</button>
                                                 {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => submitHandlerEdit(post._id)}>
-                                                    {loading ? <Spinner animation="border" size="sm" /> : 'Update Post'}
+                                                    {loadingEdit ? <Spinner animation="border" size="sm" /> : 'Update Post'}
                                                 </button> : <></>}
 
                                             </div>
