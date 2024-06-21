@@ -309,6 +309,25 @@ const MyPosts = () => {
         }
     }
 
+    const calculateTimeDifference = (updatedAt) => {
+        const now = new Date();
+        const updatedTime = new Date(updatedAt);
+        const diffInSeconds = Math.floor((now - updatedTime) / 1000);
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+
+        if (diffInSeconds < 60) {
+            return `${diffInSeconds}s`;
+        } else if (diffInMinutes < 60) {
+            return `${diffInMinutes}m`;
+        } else if (diffInMinutes < 1440) { // 60 * 24
+            return `${Math.floor(diffInMinutes / 60)}h`;
+        } else if (diffInMinutes < 10080) { // 60 * 24 * 7
+            return `${Math.floor(diffInMinutes / 1440)}d`;
+        } else {
+            return `${Math.floor(diffInMinutes / 10080)}w`;
+        }
+    };
+
     return (
         <div className='all-posts-top-ccontainer mt-2'>
             <div className="top-heading-all-posts">My Posts</div>
@@ -319,7 +338,7 @@ const MyPosts = () => {
                     posts.map((post) => (
                         <div className="single-post-holder mt-5" key={post._id}>
                             <div className="top-username-holder d-flex justify-content-between align-items-center px-3">
-                                <div>{post.user.username}</div>
+                                <div className='d-flex align-items-center'>{post.user.username} • <div style={{ fontSize: '15px', fontWeight: '500', marginLeft: '3px', marginTop: '3px' }}>{calculateTimeDifference(post.updatedAt)}</div></div>
                                 <div className='list-container'>
                                     <button onClick={() => toggleList(post._id)} className='button-list'><SlOptionsVertical /></button>
                                     {activePostId === post._id && (
