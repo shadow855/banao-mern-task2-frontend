@@ -70,7 +70,7 @@ const Login = () => {
             setLoading(false);
             setUserName("");
             setPassword("");
-            navigate('/posts'); //navigate to dashboard if logged in successfully
+            navigate('/posts');
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",

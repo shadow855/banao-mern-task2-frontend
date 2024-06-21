@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddPost from './AddPost';
 import MyPosts from './MyPosts';
 import AllPosts from './AllPosts';
@@ -52,6 +52,7 @@ const Posts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
+            setLoading(false);
             return;
         };
 
@@ -85,7 +86,7 @@ const Posts = () => {
         }
         else {
             toast({
-                title: "Please select an Image!",
+                title: "Please select jpg/jpeg/png Image!",
                 status: 'warning',
                 duration: 5000,
                 isClosable: true,
@@ -134,10 +135,14 @@ const Posts = () => {
         }
     }
 
+    // useEffect(() => {
+    //     handleHomeClick();
+    // }, [submitHandler])
+
     return (
         <div className='posts-top-container'>
 
-            <div className="renderPages">
+            <div className="renderPages" style={{ marginBottom: '60px' }}>
                 {/* {showAddPost && <AddPost />} */}
                 {showMyPost && <MyPosts />}
                 {showAllPost && <AllPosts />}
