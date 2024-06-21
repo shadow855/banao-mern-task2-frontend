@@ -10,6 +10,7 @@ import { MdDelete } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { FcLike } from "react-icons/fc";
+import { FcAddImage } from "react-icons/fc";
 
 const MyPosts = () => {
 
@@ -22,9 +23,11 @@ const MyPosts = () => {
     const [showList, setShowList] = useState(false);
     const [activePostId, setActivePostId] = useState(null);
     const [postToDelete, setPostToDelete] = useState(null);
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [pic, setPic] = useState();
+    const [selectedImageEdit, setSelectedImageEdit] = useState(null);
+    const [picEdit, setPicEdit] = useState();
     const [userId, setUserId] = useState('');
+    const [newComment, setNewComment] = useState('');
+    const [currentPostId, setCurrentPostId] = useState(null);
 
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,9 +43,8 @@ const MyPosts = () => {
 
     const getAllPosts = async () => {
         // setLoading(true);
-
         try {
-            const response = await axios.get(`${URL}/api/posts/posts`, config);
+            const response = await axios.get(`${URL}/api/posts/myposts`, config);
             const { userId, posts } = response.data;
             if (posts.length === 0) {
                 // setNoPosts(true);
@@ -61,14 +63,6 @@ const MyPosts = () => {
                 setUserId(userId);
                 setPosts(posts);
             }
-
-            // toast({
-            //     title: "Login Successful",
-            //     status: 'success',
-            //     duration: 5000,
-            //     isClosable: true,
-            //     position: 'bottom',
-            // });
 
         } catch (error) {
             toast({
@@ -97,7 +91,6 @@ const MyPosts = () => {
 
     const deletePost = async () => {
         setLoading(true);
-
         try {
             const config = {
                 headers: {
@@ -236,6 +229,124 @@ const MyPosts = () => {
         }
     };
 
+    const handleComment = async (id) => {
+        // setLoading(true);
+        setCurrentPostId(id);
+        try {
+            const response = await axios.get(`${URL}/api/comments/${id}/getallcomments`, config);
+            const allComments = response.data;
+            if (allComments.length === 0) {
+                // setNoPosts(true);
+                // setLoading(true);
+                toast({
+                    title: "No Comments Found.",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'bottom',
+                });
+            }
+            else {
+                // setLoading(false);
+                // setNoPosts(false);
+                setComments(prevComments => ({
+                    ...prevComments,
+                    [id]: allComments
+                }));
+            }
+        } catch (error) {
+            toast({
+                title: error.response.data.message || "Error Occurred!",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            // setLoading(false);
+        }
+    };
+
+    const handleAddComment = async () => {
+        if (!newComment.trim()) return;
+
+        try {
+            const response = await axios.post(`${URL}/api/comments/addcomment`, { postId: currentPostId, text: newComment }, config);
+            // setComments([...comments, response.data]);
+            toast({
+                title: "Comment added Successfully",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            handleComment(currentPostId);
+            setNewComment('');
+        } catch (error) {
+            toast({
+                title: error.response?.data?.message || "Error Occurred!",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+        }
+    };
+
+    const handleFileInputChangeEdit = (picsEdit) => {
+        setLoading(true);
+        if (picsEdit === undefined) {
+            toast({
+                title: "Please select an Image!",
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            setLoading(false);
+            return;
+        };
+
+        if (picsEdit) {
+            const readerEdit = new FileReader();
+            readerEdit.onloadend = () => {
+                setSelectedImageEdit(readerEdit.result); // Store selected image as base64 URL
+            };
+            readerEdit.readAsDataURL(picsEdit); // Convert file to base64 URL
+        }
+        if (picsEdit.type === "image/jpeg" || picsEdit.type === "image/png" || picsEdit.type === "image/jpg") {
+            const data = new FormData();
+            data.append("file", picsEdit);
+            data.append("upload_preset", "chat-app");
+            data.append("cloud_name", "dfh9c19ty");
+            fetch("https://api.cloudinary.com/v1_1/dfh9c19ty/image/upload", {
+                method: "post",
+                body: data,
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setPicEdit(data.url.toString());
+                    console.log(data.url.toString());
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                });
+        }
+        else {
+            toast({
+                title: "Please select jpg/jpeg/png Image!",
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            setLoading(false);
+            return;
+        }
+
+    };
+
     return (
         <div className='all-posts-top-ccontainer mt-2'>
             <div className="top-heading-all-posts">My Posts</div>
@@ -251,13 +362,13 @@ const MyPosts = () => {
                                     <button onClick={() => toggleList(post._id)} className='button-list'><SlOptionsVertical /></button>
                                     {activePostId === post._id && (
                                         <ul className="list-group">
-                                            <li className="list-group-item"><MdEdit data-bs-toggle="modal" data-bs-target="#staticBackdrop1" /></li>
-                                            <li className="list-group-item mt-1"><MdDelete onClick={() => confirmDeletePost(post._id)} /></li>
+                                            <li className="list-group-item"><MdEdit data-bs-toggle="modal" data-bs-target="#staticBackdropEdit" /></li>
+                                            <li className="list-group-item"><MdDelete onClick={() => confirmDeletePost(post._id)} /></li>
                                         </ul>
                                     )}
                                 </div>
                                 {/* <!-- Modal --> */}
-                                {/*  <div className="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div className="modal fade" id="staticBackdropEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div className="modal-dialog modal-dialog-centered">
                                         <div className="modal-content">
                                             <div className="modal-header">
@@ -266,26 +377,26 @@ const MyPosts = () => {
                                             </div>
                                             <div className="modal-body">
                                                 <div className="d-flex justify-content-center">
-                                                    {selectedImage ? <img src={selectedImage} alt="Selected" className="selected-image" /> : (
-                                                        <label htmlFor="file-upload" className="add-image-icon-label">
+                                                    {selectedImageEdit ? <img src={selectedImageEdit} alt="SelectedEdit" className="selected-imageEdit" /> : (
+                                                        <label htmlFor="file-uploadEdit" className="add-image-icon-label">
                                                             <FcAddImage className="add-image-icon" />
-                                                            
-                                                            <input type="file" accept='image/*' id="file-upload" className="visually-hidden" onChange={(e) => handleFileInputChange(e.target.files[0])} />
+                                                            {/* Hidden file input */}
+                                                            <input type="file" accept='image/*' id="file-uploadEdit" className="visually-hidden" onChange={(e) => handleFileInputChangeEdit(e.target.files[0])} />
                                                         </label>
                                                     )}
                                                 </div>
                                             </div>
                                             <div className="modal-footer">
-                                                {selectedImage ? <button type="button" className="btn btn-primary" onClick={() => (setSelectedImage(null), setPic(null))}>Discard</button> : <></>}
-                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => (setSelectedImage(null), setPic(null))}>Close</button>
-                                                {selectedImage ? <button type="button" className="btn btn-primary" onClick={() => submitHandler(post._id)}>
-                                                    {loading ? <Spinner animation="border" size="sm" /> : 'Update Post'}
+                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Discard</button> : <></>}
+                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}>Close</button>
+                                                {selectedImageEdit ? <button type="button" className="btn btn-primary" >
+                                                    {loading ? <Spinner animation="border" size="sm" /> : 'Add'}
                                                 </button> : <></>}
 
                                             </div>
                                         </div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                             <div className="actual-post-div d-flex justify-content-center ">
                                 <img src={post.post} alt="not found" className='image-container' />
@@ -295,12 +406,47 @@ const MyPosts = () => {
                                     {post.likes.includes(userId) ? <FcLike className='icon heart-comment-icons mx-3' style={{ fontSize: '23px', marginBottom: '2px' }} onClick={() => handleLikePost(post._id)} />
                                         : <FaRegHeart
                                             className='icon heart-comment-icons mx-3'
-                                            // style={{ cursor: 'pointer', color: post.likes.includes(post.user._id) ? 'red' : 'black' }}
                                             onClick={() => handleLikePost(post._id)}
                                         />}
-                                    <FaRegComment className='icon heart-comment-icons' />
+                                    <FaRegComment
+                                        className='icon heart-comment-icons'
+                                        onClick={() => handleComment(post._id)}
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop3"
+                                    />
                                 </div>
                                 <div className='mx-3 likes-text'>{post.likes.length} likes</div>
+
+                                {/* <!-- Modal --> */}
+                                <div className="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h1 className="modal-title fs-5" id="staticBackdropLabel">Comments</h1>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div className="modal-body">
+                                                {comments[currentPostId] && comments[currentPostId].length > 0 ? (
+                                                    <div className="comments-section mx-3 mt-2">
+                                                        {comments[currentPostId].map(comment => (
+                                                            <div key={comment._id} className="single-comment">
+                                                                <strong>{comment.user.username}:</strong> {comment.text}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="no-comments-found mx-3 mt-2">
+                                                        No comments found.
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="modal-footer d-flex justify-content-between">
+                                                <input className='comment-add-input' placeholder='Add a Comment' value={newComment} onChange={(e) => setNewComment(e.target.value)} />
+                                                <button type="button" className="btn btn-primary" onClick={handleAddComment}>Add Comment</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     ))

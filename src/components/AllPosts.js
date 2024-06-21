@@ -16,6 +16,8 @@ const AllPosts = () => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
     const [userId, setUserId] = useState('');
+    const [newComment, setNewComment] = useState('');
+    const [currentPostId, setCurrentPostId] = useState(null);
 
     const toast = useToast();
 
@@ -30,7 +32,6 @@ const AllPosts = () => {
 
     const getAllPosts = async () => {
         // setLoading(true);
-
         try {
             const response = await axios.get(`${URL}/api/posts/posts`, config);
             const { userId, posts } = response.data;
@@ -51,15 +52,6 @@ const AllPosts = () => {
                 setUserId(userId);
                 setPosts(posts);
             }
-
-            // toast({
-            //     title: "Login Successful",
-            //     status: 'success',
-            //     duration: 5000,
-            //     isClosable: true,
-            //     position: 'bottom',
-            // });
-
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",
@@ -91,6 +83,69 @@ const AllPosts = () => {
         }
     };
 
+    const handleComment = async (id) => {
+        // setLoading(true);
+        setCurrentPostId(id);
+        try {
+            const response = await axios.get(`${URL}/api/comments/${id}/getallcomments`, config);
+            const allComments = response.data;
+            if (allComments.length === 0) {
+                // setNoPosts(true);
+                // setLoading(true);
+                toast({
+                    title: "No Comments Found.",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'bottom',
+                });
+            }
+            else {
+                // setLoading(false);
+                // setNoPosts(false);
+                setComments(prevComments => ({
+                    ...prevComments,
+                    [id]: allComments
+                }));
+            }
+        } catch (error) {
+            toast({
+                title: error.response.data.message || "Error Occurred!",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            // setLoading(false);
+        }
+    };
+
+    const handleAddComment = async () => {
+        if (!newComment.trim()) return;
+
+        try {
+            const response = await axios.post(`${URL}/api/comments/addcomment`, { postId: currentPostId, text: newComment }, config);
+            // setComments([...comments, response.data]);
+            toast({
+                title: "Comment added Successfully",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            handleComment(currentPostId);
+            setNewComment('');
+        } catch (error) {
+            toast({
+                title: error.response?.data?.message || "Error Occurred!",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+        }
+    };
+
     return (
         <div className='all-posts-top-ccontainer mt-2'>
             <div className="top-heading-all-posts">All Posts</div>
@@ -109,12 +164,47 @@ const AllPosts = () => {
                                     {post.likes.includes(userId) ? <FcLike className='icon heart-comment-icons mx-3' style={{ fontSize: '23px', marginBottom: '2px' }} onClick={() => handleLikePost(post._id)} />
                                         : <FaRegHeart
                                             className='icon heart-comment-icons mx-3'
-                                            // style={{ cursor: 'pointer', color: post.likes.includes(post.user._id) ? 'red' : 'black' }}
                                             onClick={() => handleLikePost(post._id)}
                                         />}
-                                    <FaRegComment className='icon heart-comment-icons' />
+                                    <FaRegComment
+                                        className='icon heart-comment-icons'
+                                        onClick={() => handleComment(post._id)}
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop3"
+                                    />
                                 </div>
                                 <div className='mx-3 likes-text'>{post.likes.length} likes</div>
+
+                                {/* <!-- Modal --> */}
+                                <div className="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h1 className="modal-title fs-5" id="staticBackdropLabel">Comments</h1>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div className="modal-body">
+                                                {comments[currentPostId] && comments[currentPostId].length > 0 ? (
+                                                    <div className="comments-section mx-3 mt-2">
+                                                        {comments[currentPostId].map(comment => (
+                                                            <div key={comment._id} className="single-comment">
+                                                                <strong>{comment.user.username}:</strong> {comment.text}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="no-comments-found mx-3 mt-2">
+                                                        No comments found.
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="modal-footer d-flex justify-content-between">
+                                                <input className='comment-add-input' placeholder='Add a Comment' value={newComment} onChange={(e) => setNewComment(e.target.value)} />
+                                                <button type="button" className="btn btn-primary" onClick={handleAddComment}>Add Comment</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     ))
