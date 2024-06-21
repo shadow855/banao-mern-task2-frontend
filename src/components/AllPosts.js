@@ -16,6 +16,7 @@ const AllPosts = () => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
     const [loadingPost, setLoadingPost] = useState(false);
+    const [loadingComment, setLoadingComment] = useState(false);
     const [userId, setUserId] = useState('');
     const [newComment, setNewComment] = useState('');
     const [currentPostId, setCurrentPostId] = useState(null);
@@ -122,7 +123,18 @@ const AllPosts = () => {
     };
 
     const handleAddComment = async () => {
-        if (!newComment.trim()) return;
+        setLoadingComment(true);
+        if (!newComment.trim()) {
+            toast({
+                title: "Add some comment text first",
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            setLoadingComment(false);
+            return;
+        }
 
         try {
             const response = await axios.post(`${URL}/api/comments/addcomment`, { postId: currentPostId, text: newComment }, config);
@@ -136,6 +148,7 @@ const AllPosts = () => {
             });
             handleComment(currentPostId);
             setNewComment('');
+            setLoadingComment(false);
         } catch (error) {
             toast({
                 title: error.response?.data?.message || "Error Occurred!",
@@ -144,6 +157,7 @@ const AllPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
+            setLoadingComment(false);
         }
     };
 
@@ -181,7 +195,7 @@ const AllPosts = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h1 className="modal-title fs-5" id="staticBackdropLabel">Comments</h1>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setNewComment('')}></button>
                                             </div>
                                             <div className="modal-body">
                                                 {comments[currentPostId] && comments[currentPostId].length > 0 ? (
@@ -200,7 +214,9 @@ const AllPosts = () => {
                                             </div>
                                             <div className="modal-footer d-flex justify-content-between">
                                                 <input className='comment-add-input' placeholder='Add a Comment' value={newComment} onChange={(e) => setNewComment(e.target.value)} />
-                                                <button type="button" className="btn btn-primary" onClick={handleAddComment}>Add Comment</button>
+                                                <button type="button" className="btn btn-primary" onClick={handleAddComment} disabled={loadingComment}>
+                                                    {loadingComment ? <Spinner animation="border" size="sm" /> : 'Add Comment'}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
