@@ -20,6 +20,7 @@ const MyPosts = () => {
     const [likes, setLikes] = useState([]);
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingMyPost, setLoadingMyPost] = useState(false);
     const [showList, setShowList] = useState(false);
     const [activePostId, setActivePostId] = useState(null);
     const [postToDelete, setPostToDelete] = useState(null);
@@ -43,13 +44,13 @@ const MyPosts = () => {
     };
 
     const getAllPosts = async () => {
-        // setLoading(true);
+        // setLoadingMyPost(true);
         try {
             const response = await axios.get(`${URL}/api/posts/myposts`, config);
             const { userId, posts } = response.data;
             if (posts.length === 0) {
                 // setNoPosts(true);
-                setLoading(true);
+                setLoadingMyPost(true);
                 toast({
                     title: "No Post Found.",
                     status: 'success',
@@ -59,7 +60,7 @@ const MyPosts = () => {
                 });
             }
             else {
-                setLoading(false);
+                setLoadingMyPost(false);
                 // setNoPosts(false);
                 setUserId(userId);
                 setPosts(posts);
@@ -73,7 +74,7 @@ const MyPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            setLoading(false);
+            setLoadingMyPost(false);
         }
     }
 
@@ -307,7 +308,7 @@ const MyPosts = () => {
         <div className='all-posts-top-ccontainer mt-2'>
             <div className="top-heading-all-posts">My Posts</div>
             <div className="post-container d-flex flex-column align-items-center mt-3">
-                {loading ? (
+                {loadingMyPost ? (
                     <Spinner animation="border" />
                 ) : (
                     posts.map((post) => (
@@ -329,7 +330,7 @@ const MyPosts = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h1 className="modal-title fs-5" id="staticBackdropLabel">Update Post</h1>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => (setSelectedImageEdit(null), setPicEdit(null))}></button>
                                             </div>
                                             <div className="modal-body">
                                                 <div className="d-flex justify-content-center">

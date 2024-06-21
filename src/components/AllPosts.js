@@ -15,6 +15,7 @@ const AllPosts = () => {
     const [likes, setLikes] = useState([]);
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingPost, setLoadingPost] = useState(false);
     const [userId, setUserId] = useState('');
     const [newComment, setNewComment] = useState('');
     const [currentPostId, setCurrentPostId] = useState(null);
@@ -31,13 +32,13 @@ const AllPosts = () => {
     };
 
     const getAllPosts = async () => {
-        // setLoading(true);
+        // setLoadingPost(true);
         try {
             const response = await axios.get(`${URL}/api/posts/posts`, config);
             const { userId, posts } = response.data;
             if (posts.length === 0) {
                 // setNoPosts(true);
-                setLoading(true);
+                setLoadingPost(true);
                 toast({
                     title: "No Post Found.",
                     status: 'success',
@@ -47,7 +48,7 @@ const AllPosts = () => {
                 });
             }
             else {
-                setLoading(false);
+                setLoadingPost(false);
                 // setNoPosts(false);
                 setUserId(userId);
                 setPosts(posts);
@@ -60,7 +61,7 @@ const AllPosts = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            setLoading(false);
+            setLoadingPost(false);
         }
     }
 
@@ -150,7 +151,7 @@ const AllPosts = () => {
         <div className='all-posts-top-ccontainer mt-2'>
             <div className="top-heading-all-posts">All Posts</div>
             <div className="post-container d-flex flex-column align-items-center mt-3">
-                {loading ? (
+                {loadingPost ? (
                     <Spinner animation="border" />
                 ) : (
                     posts.map((post) => (
