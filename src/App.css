@@ -82,3 +82,80 @@
   color: white;
   background-color: black;
 }
+
+@media screen and (max-width: 580px) {
+  .guest-button {
+    font-size: 13px;
+  }
+  .login-button {
+    font-size: 13px;
+  }
+
+  .signup-text {
+    font-size: 13px;
+  }
+  .floatingInput {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .guest-button {
+    font-size: 11px;
+  }
+  .login-button {
+    font-size: 11px;
+  }
+
+  .signup-text {
+    font-size: 11px;
+  }
+  .floatingInput {
+    font-size: 13px;
+  }
+
+  .forgot-text {
+    font-size: 13px;
+  }
+  .login-text {
+    font-size: 13px;
+  }
+}
+@media screen and (max-width: 420px) {
+  .login-button {
+    font-size: 11px;
+  }
+
+  .signup-text {
+    font-size: 11px;
+  }
+  .floatingInput {
+    font-size: 11px;
+  }
+
+  .forgot-text {
+    font-size: 13px;
+  }
+  .login-text {
+    font-size: 13px;
+  }
+}
+@media screen and (max-width: 370px) {
+  .login-button {
+    font-size: 11px;
+  }
+
+  .signup-text {
+    font-size: 11px;
+  }
+  .floatingInput {
+    font-size: 9px;
+  }
+
+  .forgot-text {
+    font-size: 13px;
+  }
+  .login-text {
+    font-size: 11px;
+  }
+}

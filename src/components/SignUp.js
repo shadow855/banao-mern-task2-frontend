@@ -97,11 +97,11 @@ const SignUp = () => {
                 <div className='mt-2 mb-5' style={{ fontSize: '30px' }}>Sign Up</div>
                 <div className="form-floating mb-3">
                     <input type="name" className="form-control" id="floatingInput" placeholder="" value={username} onChange={(e) => setUserName(e.target.value)} />
-                    <label htmlFor="floatingInput">Username</label>
+                    <label className='floatingInput' htmlFor="floatingInput">Username</label>
                 </div>
                 <div className="form-floating mb-3">
                     <input type="email" className="form-control" id="floatingInput" placeholder="" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <label htmlFor="floatingInput">Email address</label>
+                    <label className='floatingInput' htmlFor="floatingInput">Email address</label>
                 </div>
                 <div className="form-floating mb-3">
                     <input
@@ -112,7 +112,7 @@ const SignUp = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <label htmlFor="floatingPassword">Password</label>
+                    <label className='floatingInput' htmlFor="floatingPassword">Password</label>
                     <span
                         className="position-absolute"
                         style={{ right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
@@ -130,7 +130,7 @@ const SignUp = () => {
                         value={confirmpassword}
                         onChange={(e) => setConfirmpassword(e.target.value)}
                     />
-                    <label htmlFor="floatingPassword">ConfirmPassword</label>
+                    <label className='floatingInput' htmlFor="floatingPassword">ConfirmPassword</label>
                     <span
                         className="position-absolute"
                         style={{ right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
@@ -144,7 +144,7 @@ const SignUp = () => {
                 </button>
             </div>
             <div className='login-container d-flex flex-column align-items-center mt-3'>
-                <div className='mt-3 mb-3' >Have an account? <span onClick={() => navigate('/login')} style={{ color: "#0095f6", cursor: 'pointer' }}>Log in</span></div>
+                <div className='mt-3 mb-3 login-text' >Have an account? <span onClick={() => navigate('/login')} style={{ color: "#0095f6", cursor: 'pointer' }}>Log in</span></div>
             </div>
         </div>
     )

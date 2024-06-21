@@ -172,7 +172,7 @@ const Login = () => {
                 <button className='login-button mt-3 mb-3' type="submit" onClick={handleSignin} disabled={loading}>
                     {loading ? <Spinner animation="border" size="sm" /> : 'Login'}
                 </button>
-                <div className="mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{ cursor: 'pointer' }}>Forgot Password?</div>
+                <div className="mb-5 forgot-text" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{ cursor: 'pointer' }}>Forgot Password?</div>
 
                 {/* <!-- Modal --> */}
                 <div className="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -217,7 +217,7 @@ const Login = () => {
                 </div>
             </div>
             <div className='login-container d-flex flex-column align-items-center mt-3'>
-                <div className='mt-3 mb-3' >Don't have an account? <span onClick={() => navigate('/signup')} style={{ color: "#0095f6", cursor: 'pointer' }}>Sign Up</span></div>
+                <div className='mt-3 mb-3 signup-text' >Don't have an account? <span onClick={() => navigate('/signup')} style={{ color: "#0095f6", cursor: 'pointer' }}>Sign Up</span></div>
             </div>
         </div>
     )

@@ -122,98 +122,6 @@ const MyPosts = () => {
         }
     }
 
-    // const handleFileInputChange = (pics) => {
-    //     setLoading(true);
-    //     if (pics === undefined) {
-    //         toast({
-    //             title: "Please select an Image!",
-    //             status: 'warning',
-    //             duration: 5000,
-    //             isClosable: true,
-    //             position: 'bottom',
-    //         });
-    //         return;
-    //     };
-
-    //     if (pics) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setSelectedImage(reader.result); // Store selected image as base64 URL
-
-    //         };
-    //         reader.readAsDataURL(pics); // Convert file to base64 URL
-    //     }
-    //     if (pics.type === "image/jpeg" || pics.type === "image/png" || pics.type === "image/jpg") {
-    //         const data = new FormData();
-    //         data.append("file", pics);
-    //         data.append("upload_preset", "chat-app");
-    //         data.append("cloud_name", "dfh9c19ty");
-    //         fetch("https://api.cloudinary.com/v1_1/dfh9c19ty/image/upload", {
-    //             method: "post",
-    //             body: data,
-    //         })
-    //             .then((res) => res.json())
-    //             .then((data) => {
-    //                 setPic(data.url.toString());
-    //                 console.log(data.url.toString());
-    //                 setLoading(false);
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //                 setLoading(false);
-    //             });
-    //     }
-    //     else {
-    //         toast({
-    //             title: "Please select jpg/jpeg/png Image!",
-    //             status: 'warning',
-    //             duration: 5000,
-    //             isClosable: true,
-    //             position: 'bottom',
-    //         });
-    //         setLoading(false);
-    //         return;
-    //     }
-
-    // };
-
-    // const submitHandler = async (id) => {
-    //     setLoading(true);
-
-    //     try {
-    //         const config = {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 "Content-type": "application/json",
-    //             },
-    //         };
-
-    //         const { data } = await axios.put(`${URL}/api/posts/updatepost/${id}`, { post: pic }, config);
-    //         toast({
-    //             title: "Post Updated Successfully",
-    //             status: 'success',
-    //             duration: 5000,
-    //             isClosable: true,
-    //             position: 'bottom',
-    //         });
-
-    //         localStorage.setItem("userInfo", JSON.stringify(data));
-    //         setSelectedImage(null);
-    //         setPic(null);
-    //         setLoading(false);
-    //     } catch (error) {
-    //         toast({
-    //             title: "Error Occurred!",
-    //             description: error.response.data.message,
-    //             status: 'error',
-    //             duration: 5000,
-    //             isClosable: true,
-    //             position: 'bottom',
-    //         });
-    //         setLoading(false);
-    //     }
-    // }
-
     const handleLikePost = async (id) => {
         try {
             const response = await axios.put(`${URL}/api/posts/addlike/${id}`, {}, config);
@@ -305,15 +213,14 @@ const MyPosts = () => {
             setLoading(false);
             return;
         };
+        if (picsEdit.type === "image/jpeg" || picsEdit.type === "image/png" || picsEdit.type === "image/jpg") {
 
-        if (picsEdit) {
             const readerEdit = new FileReader();
             readerEdit.onloadend = () => {
-                setSelectedImageEdit(readerEdit.result); // Store selected image as base64 URL
+                setSelectedImageEdit(readerEdit.result); // Update selected image state
             };
             readerEdit.readAsDataURL(picsEdit); // Convert file to base64 URL
-        }
-        if (picsEdit.type === "image/jpeg" || picsEdit.type === "image/png" || picsEdit.type === "image/jpg") {
+
             const data = new FormData();
             data.append("file", picsEdit);
             data.append("upload_preset", "chat-app");

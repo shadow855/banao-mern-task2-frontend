@@ -16,6 +16,7 @@ const Posts = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [pic, setPic] = useState();
     const [loading, setLoading] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     const toast = useToast();
 
@@ -29,9 +30,9 @@ const Posts = () => {
     };
 
     const handleAddClick = () => {
-        // setActiveIcon('add');
+        setActiveIcon('add');
         // setShowMyPost(false);
-        // setShowAllPost(false);
+        setShowAllPost(false);
         // setShowAddPost(true);
     };
 
@@ -122,6 +123,7 @@ const Posts = () => {
             setSelectedImage(null);
             setPic(null);
             setLoading(false);
+            setSubmitSuccess(true);
         } catch (error) {
             toast({
                 title: "Error Occurred!",
@@ -135,9 +137,20 @@ const Posts = () => {
         }
     }
 
-    // useEffect(() => {
-    //     handleHomeClick();
-    // }, [submitHandler])
+    useEffect(() => {
+        handleHomeClick();
+    }, [])
+
+
+    useEffect(() => {
+        if (submitSuccess) {
+            handleAddClick(); // Call handleAddClick immediately
+            setTimeout(() => {
+                handleHomeClick(); // Call handleHomeClick after 2 seconds delay
+            }, 500);
+            setSubmitSuccess(false); // Reset the flag
+        }
+    }, [submitSuccess]);
 
     return (
         <div className='posts-top-container'>
@@ -185,7 +198,7 @@ const Posts = () => {
                 <div className={`footer-icon ${activeIcon === 'home' ? 'active' : ''}`} onClick={handleHomeClick}>
                     <i className={`fas fa-home ${activeIcon === 'home' ? 'active-icon' : ''}`}></i> {/* Home Icon */}
                 </div>
-                <div className='footer-icon footer-icon-add' onClick={handleAddClick} data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                <div className='footer-icon footer-icon-add' data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
                     <i className='fas fa-plus'></i> {/* Add Icon */}
                 </div>
                 <div className={`footer-icon ${activeIcon === 'user' ? 'active' : ''}`} onClick={handleUserClick}>
