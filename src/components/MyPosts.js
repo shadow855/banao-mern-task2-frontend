@@ -176,7 +176,16 @@ const MyPosts = () => {
     };
 
     const handleAddComment = async () => {
-        if (!newComment.trim()) return;
+        if (!newComment.trim()) {
+            toast({
+                title: "Add some comment text first",
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
+            return;
+        }
 
         try {
             const response = await axios.post(`${URL}/api/comments/addcomment`, { postId: currentPostId, text: newComment }, config);
